@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>韩语40音 · 愈系学习</title>
+<style>
+:root {
+  /* 调色板：低饱和度、高亮度的柔和色系 */
+  --bg: #f9f9fb;
+  --surface: #ffffff;
+  --surface2: #f3f4f8;
+  --border: #e2e4ed;
+  --accent: #e8b7bc; /* 柔和粉 */
+  --accent2: #b5ceda; /* 柔和蓝 */
+  --text: #5a5a66;
+  --text-dim: #8e8e9c;
+  --text-muted: #b0b0bc;
+  --mastered: #a8d5ba; /* 柔和绿 */
+  --weak: #edb5b5;     /* 柔和红 */
+  --card-hover: #ffffff;
+  --glow: rgba(232, 183, 188, 0.2);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* 浅色背景光晕 */
+body::before {
+  content:'';
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(232,183,188,0.15) 0%, transparent 50%),
+    radial-gradient(circle at 85% 80%, rgba(181,206,218,0.15) 0%, transparent 50%);
+  pointer-events:none; z-index:0;
+}
+
+header {
+  text-align:center;
+  padding:60px 20px 30px;
+  position:relative; z-index:1;
+}
+
+.header-kr {
+  font-size:12px;
+  letter-spacing:6px;
+  color: var(--accent);
+  margin-bottom:14px;
+  font-weight: 600;
+}
+
+h1 {
+  font-size:34px;
+  font-weight:300;
+  color: var(--text);
+  letter-spacing:6px;
+  margin-bottom:10px;
+}
+
+.subtitle {
+  font-size:13px;
+  color: var(--text-muted);
+  letter-spacing:2px;
+}
+
+.divider {
+  width:40px; height:2px;
+  background: var(--accent2);
+  margin:24px auto;
+  border-radius: 2px;
+  opacity: 0.6;
+}
+
+nav {
+  display:flex; justify-content:center;
+  gap:12px; padding:0 20px 40px;
+  flex-wrap:wrap; position:relative; z-index:1;
+}
+
+.nav-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding:10px 24px;
+  border-radius:30px; /* 圆角更有治愈感 */
+  cursor:pointer;
+  font-size:13px;
+  letter-spacing:1px;
+  transition:all .3s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+}
+.nav-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+.nav-btn.active { 
+    background: var(--accent); 
+    border-color: var(--accent); 
+    color: #fff; 
+    box-shadow: 0 4px 12px var(--glow);
+}
+
+.content {
+  max-width:1120px;
+  margin:0 auto;
+  padding:0 20px 100px;
+  position:relative; z-index:1;
+}
+
+.section-label {
+  font-size:12px;
+  letter-spacing:2px;
+  color: var(--text-muted);
+  margin-bottom:20px; margin-top:40px;
+  display:flex; align-items:center; gap:15px;
+}
+.section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+.progress-bar-wrap {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid #fff;
+  border-radius:12px;
+  padding:20px 28px;
+  display:flex; align-items:center; gap:30px;
+  flex-wrap:wrap;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+}
+.progress-stats { display:flex; gap:30px; }
+.stat { text-align:center; }
+.stat-num { font-size:22px; color: var(--text); font-weight:400; }
+.stat-label { font-size:11px; color: var(--text-muted); margin-top:4px; }
+.progress-track { flex:1; min-width:150px; height:6px; background:var(--surface2); border-radius:10px; overflow:hidden; }
+.progress-fill { height:100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition:width .6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(180px, 1fr));
+  gap:16px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius:12px;
+  padding:24px 20px 18px;
+  cursor:pointer;
+  transition:all .3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position:relative;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+}
+
+.card:hover { 
+  transform:translateY(-5px); 
+  border-color: var(--accent2);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.06); 
+}
+
+.card.playing { background: var(--surface2); border-color: var(--accent2); }
+.card.mastered { background: #f0f9f4; border-color: var(--mastered); }
+.card.weak { background: #fff5f5; border-color: var(--weak); }
+
+.card-status { position:absolute; top:12px; right:12px; font-size:12px; font-weight: bold; }
+.card-char { font-size:48px; color: var(--text); line-height:1.2; margin-bottom:6px; }
+.card-roman { font-size:13px; color: var(--accent); font-weight:600; margin-bottom:4px; }
+.card-cn-pron { font-size:12px; color: var(--accent2); margin-bottom:8px; }
+.card-hint { font-size:11px; color: var(--text-muted); margin-bottom:16px; line-height:1.4; height: 30px; overflow: hidden; }
+
+.word-chip {
+  display:flex; align-items:center; justify-content: space-between;
+  padding:6px 10px;
+  background: var(--bg);
+  border-radius:6px; margin-bottom: 6px;
+  transition:all .2s; font-size:11px;
+}
+.word-chip:hover { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.word-kr { color: var(--text); font-weight: 500; }
+.word-cn { color: var(--text-dim); }
+
+.card-actions { display:flex; gap:8px; margin-top:14px; padding-top:12px; border-top:1px solid var(--border); }
+.action-btn {
+  flex:1; padding:6px 0; border-radius:6px;
+  border:1px solid var(--border); background:transparent;
+  color:var(--text-muted); font-size:11px; cursor:pointer;
+  transition:all .2s;
+}
+.action-btn:hover { background: var(--surface2); color: var(--text-dim); }
+.action-btn.mastered-btn.active { background: var(--mastered); border-color: var(--mastered); color:#fff; }
+.action-btn.weak-btn.active { background: var(--weak); border-color: var(--weak); color:#fff; }
+
+/* PRACTICE & QUIZ */
+.view { display:none; }
+.view.active { display:block; animation: fadeIn 0.5s ease; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.center-wrap { max-width:440px; margin:40px auto; text-align:center; }
+
+.practice-card {
+  background: var(--surface);
+  border-radius:20px;
+  padding:60px 40px;
+  margin-bottom:24px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+  border: 1px solid #fff;
+}
+.practice-char { font-size:120px; color: var(--text); margin-bottom:20px; }
+.practice-roman { font-size:20px; color: var(--accent); font-weight: 600; }
+.practice-cn-pron { font-size:16px; color: var(--accent2); }
+
+.quiz-card {
+  background: var(--surface);
+  border-radius:20px;
+  padding:50px 30px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+}
+.quiz-option {
+  padding:16px; border:1px solid var(--border); border-radius:12px;
+  background: var(--surface); color:var(--text); font-size:14px;
+  transition:all .2s;
+}
+.quiz-option:hover:not(:disabled) { border-color: var(--accent2); background: var(--surface2); }
+.quiz-option.correct { background: var(--mastered); color: #fff; border-color: var(--mastered); }
+.quiz-option.wrong { background: var(--weak); color: #fff; border-color: var(--weak); }
+
+.btn {
+  padding:12px 30px; border-radius:30px; border:none;
+  background: var(--surface2); color:var(--text-dim); font-size:14px;
+  cursor:pointer; transition:all .3s;
+}
+.btn.primary { background: var(--accent); color:#fff; }
+.btn.primary:hover { opacity: 0.9; transform: translateY(-2px); }
+
+.toast {
+  position:fixed; bottom:40px; left:50%; transform:translateX(-50%);
+  background: rgba(90, 90, 100, 0.9); color:#fff;
+  padding:12px 30px; border-radius:40px; font-size:14px;
+  opacity:0; transition:0.3s; z-index:1000;
+}
+.toast.show { opacity:1; bottom: 50px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-kr">Hangeul Soft Learning</div>
+  <h1>韩语四十音</h1>
+  <p class="subtitle">清爽配色 · 舒心学习</p>
+  <div class="divider"></div>
+</header>
+
+<nav>
+  <button class="nav-btn active" onclick="switchView('learn',this)">学习模式</button>
+  <button class="nav-btn" onclick="switchView('practice',this)">记忆练习</button>
+  <button class="nav-btn" onclick="switchView('quiz',this)">发音测验</button>
+</nav>
+
+<div class="content">
+  <div id="view-learn" class="view active">
+    <div class="progress-bar-wrap">
+      <div class="progress-stats">
+        <div class="stat"><div class="stat-num" id="total-count">40</div><div class="stat-label">总计</div></div>
+        <div class="stat"><div class="stat-num" id="mastered-count" style="color:var(--mastered)">0</div><div class="stat-label">已掌握</div></div>
+        <div class="stat"><div class="stat-num" id="weak-count" style="color:var(--weak)">0</div><div class="stat-label">待加强</div></div>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+    
+    <div class="section-label">基本元音 · 모음</div>
+    <div class="grid" id="grid-vowels"></div>
+    <div class="section-label">基本辅音 · 자음</div>
+    <div class="grid" id="grid-consonants"></div>
+    <div class="section-label">复合元音 · 이중모음</div>
+    <div class="grid" id="grid-compound"></div>
+  </div>
+
+  <div id="view-practice" class="view">
+    <div class="center-wrap">
+      <div class="practice-card" id="practice-card" onclick="revealPractice()">
+        <div class="practice-char" id="practice-char">ㅏ</div>
+        <div class="practice-reveal" id="practice-reveal" style="min-height: 60px;">
+          <div class="practice-roman" id="practice-roman" style="opacity:0">a</div>
+          <div class="practice-cn-pron" id="practice-cn-pron" style="opacity:0">啊</div>
+        </div>
+        <p style="color:var(--text-muted); font-size:11px; margin-top:20px;">点击卡片翻开</p>
+      </div>
+      <div class="btns">
+        <button class="btn" onclick="speakPractice()" style="margin-right:8px;">听音</button>
+        <button class="btn primary" onclick="nextPractice()">下一个</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="view-quiz" class="view">
+    <div class="center-wrap">
+        <div class="quiz-card">
+            <div class="practice-char" id="quiz-char" onclick="speakQuiz()" style="cursor:pointer">ㅏ</div>
+            <p style="color:var(--text-muted); font-size:12px; margin-bottom:24px;">听发音，选出正确的罗马音</p>
+            <div class="quiz-options grid" id="quiz-options" style="grid-template-columns: 1fr 1fr;"></div>
+            <button class="btn primary" id="quiz-next" onclick="nextQuiz()" style="display:none; margin-top:20px; width:100%;">下一题</button>
+        </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// 数据结构
+const SOUNDS = {
+  vowels: [
+    { char:'ㅏ', roman:'a',   cn:'啊',    hint:'嘴巴大张，发"啊"', words:[{kr:'아버지',cn:'父亲'},{kr:'아이',cn:'孩子'}] },
+    { char:'ㅑ', roman:'ya',  cn:'呀',    hint:'快速滑向"啊"', words:[{kr:'야채',cn:'蔬菜'},{kr:'야구',cn:'棒球'}] },
+    { char:'ㅓ', roman:'eo',  cn:'哦（短）', hint:'嘴半开不圆，发短"哦"', words:[{kr:'어머니',cn:'母亲'},{kr:'어디',cn:'哪里'}] },
+    { char:'ㅕ', roman:'yeo', cn:'哟',    hint:'快速滑向"哦"', words:[{kr:'여자',cn:'女人'},{kr:'여기',cn:'这里'}] },
+    { char:'ㅗ', roman:'o',   cn:'哦（圆）', hint:'嘴唇圆，发"哦"', words:[{kr:'오빠',cn:'哥哥'},{kr:'오늘',cn:'今天'}] },
+    { char:'ㅛ', roman:'yo',  cn:'哟',    hint:'快速滑向圆"哦"', words:[{kr:'요리',cn:'料理'},{kr:'요즘',cn:'最近'}] },
+    { char:'ㅜ', roman:'u',   cn:'呜',    hint:'嘴唇撮圆，发"呜"', words:[{kr:'우리',cn:'我们'},{kr:'우유',cn:'牛奶'}] },
+    { char:'ㅠ', roman:'yu',  cn:'咿呜',  hint:'快速滑向圆"呜"', words:[{kr:'유리',cn:'玻璃'},{kr:'유행',cn:'流行'}] },
+    { char:'ㅡ', roman:'eu',  cn:'으（扁）', hint:'嘴扁平不圆，发"으"', words:[{kr:'음악',cn:'音乐'},{kr:'이름',cn:'名字'}] },
+    { char:'ㅣ', roman:'i',   cn:'伊',    hint:'嘴扁，发清晰"伊"', words:[{kr:'이름',cn:'名字'},{kr:'이것',cn:'这个'}] },
+  ],
+  consonants: [
+    { char:'ㄱ', roman:'g/k',  cn:'格/克', hint:'送气弱，类似"格"', words:[{kr:'가방',cn:'包'},{kr:'가족',cn:'家族'}] },
+    { char:'ㄴ', roman:'n',    cn:'呢',   hint:'舌尖抵上齿，发"n"', words:[{kr:'나무',cn:'树木'},{kr:'나라',cn:'国家'}] },
+    { char:'ㄷ', roman:'d/t',  cn:'德/特', hint:'送气弱，类似"德"', words:[{kr:'다리',cn:'腿'},{kr:'도시',cn:'城市'}] },
+    { char:'ㄹ', roman:'r/l',  cn:'勒',   hint:'舌头弹动，R和L之间', words:[{kr:'라면',cn:'拉面'},{kr:'리모컨',cn:'遥控器'}] },
+    { char:'ㅁ', roman:'m',    cn:'么',   hint:'闭嘴发"m"，同中文', words:[{kr:'마음',cn:'心'},{kr:'머리',cn:'头'}] },
+    { char:'ㅂ', roman:'b/p',  cn:'北/铺', hint:'送气弱，类似"北"', words:[{kr:'바다',cn:'大海'},{kr:'밥',cn:'米饭'}] },
+    { char:'ㅅ', roman:'s',    cn:'思',   hint:'发"s"，同中文', words:[{kr:'사랑',cn:'爱'},{kr:'사과',cn:'苹果'}] },
+    { char:'ㅇ', roman:'-/ng', cn:'（无/昂）', hint:'开头无音，结尾发鼻音ng', words:[{kr:'아이',cn:'孩子'},{kr:'英语',cn:'英语'}] },
+    { char:'ㅈ', roman:'j',    cn:'子',   hint:'类似中文"资"，送气弱', words:[{kr:'자동차',cn:'汽车'},{kr:'지금',cn:'现在'}] },
+    { char:'ㅊ', roman:'ch',   cn:'次',   hint:'送气强，类似"次"', words:[{kr:'차',cn:'车/茶'},{kr:'친구',cn:'朋友'}] },
+    { char:'ㅋ', roman:'k',    cn:'克',   hint:'送气强K，类似"克"', words:[{kr:'커피',cn:'咖啡'},{kr:'코',cn:'鼻子'}] },
+    { char:'ㅌ', roman:'t',    cn:'特',   hint:'送气强T，类似"特"', words:[{kr:'타다',cn:'乘坐'},{kr:'토마토',cn:'番茄'}] },
+    { char:'ㅍ', roman:'p',    cn:'铺',   hint:'送气强P，类似"铺"', words:[{kr:'파',cn:'葱'},{kr:'피자',cn:'披萨'}] },
+    { char:'ㅎ', roman:'h',    cn:'呵',   hint:'气流强，类似"呵"', words:[{kr:'하늘',cn:'天空'},{kr:'학교',cn:'学校'}] },
+    { char:'ㄲ', roman:'kk',   cn:'紧格', hint:'紧音，喉咙收紧发"格"', words:[{kr:'까만',cn:'黑色'},{kr:'꽃',cn:'花'}] },
+    { char:'ㄸ', roman:'tt',   cn:'紧德',  hint:'紧音，喉咙收紧发"德"', words:[{kr:'딸',cn:'女儿'},{kr:'뚜껑',cn:'盖子'}] },
+    { char:'ㅃ', roman:'pp',   cn:'紧北',  hint:'紧音，喉咙收紧发"北"', words:[{kr:'빠르다',cn:'快'},{kr:'뻐꾸기',cn:'布谷鸟'}] },
+    { char:'ㅆ', roman:'ss',   cn:'紧思',  hint:'紧音，喉咙收紧发"思"', words:[{kr:'쓰다',cn:'写/苦'},{kr:'씨앗',cn:'种子'}] },
+    { char:'ㅉ', roman:'jj',   cn:'紧子',  hint:'紧音，喉咙收紧发"子"', words:[{kr:'짜다',cn:'咸'},{kr:'찌개',cn:'锅'}] },
+  ],
+  compound: [
+    { char:'ㅐ', roman:'ae',  cn:'爱（短）', hint:'类似"爱"但更短促', words:[{kr:'개',cn:'狗'},{kr:'배',cn:'梨/船'}] },
+    { char:'ㅒ', roman:'yae', cn:'也（短）', hint:'快速滑向"爱"', words:[{kr:'얘기',cn:'故事'},{kr:'얘',cn:'这孩子'}] },
+    { char:'ㅔ', roman:'e',   cn:'诶',    hint:'类似"诶"，口型略开', words:[{kr:'세다',cn:'强'},{kr:'게',cn:'螃蟹'}] },
+    { char:'ㅖ', roman:'ye',  cn:'也',    hint:'快速滑向"诶"', words:[{kr:'예쁘다',cn:'漂亮'},{kr:'예의',cn:'礼仪'}] },
+    { char:'ㅘ', roman:'wa',  cn:'哇',    hint:'ㅗ+ㅏ快速连读', words:[{kr:'哇',cn:'哇/来'},{kr:'봐요',cn:'看（敬）'}] },
+    { char:'ㅙ', roman:'wae', cn:'哇诶',  hint:'ㅗ+ㅐ快速连读', words:[{kr:'왜',cn:'为什么'},{kr:'돼지',cn:'猪'}] },
+    { char:'ㅚ', roman:'oe',  cn:'微（圆）', hint:'圆唇发"诶"，类似法语eu', words:[{kr:'최고',cn:'最好'},{kr:'외국',cn:'外国'}] },
+    { char:'ㅝ', roman:'wo',  cn:'我',    hint:'ㅜ+ㅓ快速连读', words:[{kr:'원하다',cn:'想要'},{kr:'뭐',cn:'什么'}] },
+    { char:'ㅞ', roman:'we',  cn:'威诶',  hint:'ㅜ+ㅔ快速连读', words:[{kr:'웨이터',cn:'服务员'},{kr:'웨딩',cn:'婚礼'}] },
+    { char:'ㅟ', roman:'wi',  cn:'威',    hint:'ㅜ+ㅣ快速连读', words:[{kr:'위',cn:'上面'},{kr:'쥐',cn:'老鼠'}] },
+    { char:'ㅢ', roman:'ui',  cn:'으伊',  hint:'ㅡ+ㅣ快速连读', words:[{kr:'의자',cn:'椅子'},{kr:'의사',cn:'医生'}] },
+  ]
+};
+
+const ALL = [...SOUNDS.vowels, ...SOUNDS.consonants, ...SOUNDS.compound];
+
+let state = {
+  mastered: new Set(JSON.parse(localStorage.getItem('kr-mastered') || '[]')),
+  weak: new Set(JSON.parse(localStorage.getItem('kr-weak') || '[]')),
+  practiceQueue: [],
+  practiceIdx: 0,
+  quizCurrent: null
+};
+
+// 工具函数
+function speak(text) {
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ko-KR'; u.rate = 0.8;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1500);
+}
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+// 核心功能
+function renderCards() {
+  ['vowels', 'consonants', 'compound'].forEach(type => {
+    const container = document.getElementById(`grid-${type}`);
+    container.innerHTML = '';
+    SOUNDS[type].forEach(item => {
+      const isM = state.mastered.has(item.char);
+      const isW = state.weak.has(item.char);
+      const card = document.createElement('div');
+      card.className = `card ${isM?'mastered':''} ${isW?'weak':''}`;
+      card.innerHTML = `
+        <div class="card-status">${isM?'✓':isW?'?':''}</div>
+        <div class="card-char">${item.char}</div>
+        <div class="card-roman">${item.roman}</div>
+        <div class="card-cn-pron">${item.cn}</div>
+        <div class="card-hint">${item.hint}</div>
+        <div class="card-words">
+          ${item.words.map(w => `<div class="word-chip" onclick="event.stopPropagation(); speak('${w.kr}')">
+            <span class="word-kr">${w.kr}</span><span class="word-cn">${w.cn}</span>
+          </div>`).join('')}
+        </div>
+        <div class="card-actions">
+          <button class="action-btn mastered-btn ${isM?'active':''}" onclick="toggleStatus(event, '${item.char}', 'mastered')">掌握</button>
+          <button class="action-btn weak-btn ${isW?'active':''}" onclick="toggleStatus(event, '${item.char}', 'weak')">加强</button>
+        </div>
+      `;
+      card.onclick = () => speak(item.char);
+      container.appendChild(card);
+    });
+  });
+  updateProgress();
+}
+
+function toggleStatus(e, char, type) {
+  e.stopPropagation();
+  const other = type === 'mastered' ? 'weak' : 'mastered';
+  if (state[type].has(char)) state[type].delete(char);
+  else { state[type].add(char); state[other].delete(char); }
+  localStorage.setItem(`kr-${type}`, JSON.stringify([...state[type]]));
+  localStorage.setItem(`kr-${other}`, JSON.stringify([...state[other]]));
+  renderCards();
+}
+
+function updateProgress() {
+  const mCount = state.mastered.size;
+  const wCount = state.weak.size;
+  document.getElementById('mastered-count').textContent = mCount;
+  document.getElementById('weak-count').textContent = wCount;
+  document.getElementById('progress-fill').style.width = `${(mCount/40)*100}%`;
+}
+
+// 视图控制
+function switchView(view, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`view-${view}`).classList.add('active');
+  btn.classList.add('active');
+  if(view === 'practice') initPractice();
+  if(view === 'quiz') initQuiz();
+}
+
+// 练习逻辑
+function initPractice() {
+  state.practiceQueue = shuffle(ALL);
+  state.practiceIdx = 0;
+  showPractice();
+}
+
+function showPractice() {
+  const item = state.practiceQueue[state.practiceIdx];
+  document.getElementById('practice-char').textContent = item.char;
+  document.getElementById('practice-roman').textContent = item.roman;
+  document.getElementById('practice-cn-pron').textContent = item.cn;
+  document.getElementById('practice-roman').style.opacity = 0;
+  document.getElementById('practice-cn-pron').style.opacity = 0;
+}
+
+function revealPractice() {
+  document.getElementById('practice-roman').style.opacity = 1;
+  document.getElementById('practice-cn-pron').style.opacity = 1;
+  speak(state.practiceQueue[state.practiceIdx].char);
+}
+
+function nextPractice() {
+  state.practiceIdx = (state.practiceIdx + 1) % ALL.length;
+  showPractice();
+}
+
+function speakPractice() { speak(state.practiceQueue[state.practiceIdx].char); }
+
+// 测验逻辑
+function initQuiz() {
+    nextQuiz();
+}
+
+function nextQuiz() {
+    const correct = ALL[Math.floor(Math.random()*ALL.length)];
+    state.quizCurrent = correct;
+    document.getElementById('quiz-char').textContent = correct.char;
+    document.getElementById('quiz-next').style.display = 'none';
+    
+    let options = [correct];
+    while(options.length < 4) {
+        const randomItem = ALL[Math.floor(Math.random()*ALL.length)];
+        if(!options.includes(randomItem)) options.push(randomItem);
+    }
+    options = shuffle(options);
+    
+    const container = document.getElementById('quiz-options');
+    container.innerHTML = '';
+    options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-option';
+        btn.textContent = opt.roman;
+        btn.onclick = () => checkQuiz(opt === correct, btn);
+        container.appendChild(btn);
+    });
+    speak(correct.char);
+}
+
+function checkQuiz(isCorrect, btn) {
+    const btns = document.querySelectorAll('.quiz-option');
+    btns.forEach(b => b.disabled = true);
+    if(isCorrect) {
+        btn.classList.add('correct');
+        toast('很棒！回答正确');
+    } else {
+        btn.classList.add('wrong');
+        toast('再试一次吧');
+    }
+    document.getElementById('quiz-next').style.display = 'block';
+}
+
+function speakQuiz() { speak(state.quizCurrent.char); }
+
+// 初始化
+renderCards();
+</script>
+
+</body>
+</html>
